@@ -3,7 +3,7 @@ package ru.evolenta.book.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.evolenta.book.dto.AuthorDto;
+import ru.evolenta.book.dto.AuthorRequest;
 import ru.evolenta.book.model.Author;
 import ru.evolenta.book.repository.AuthorRepository;
 import ru.evolenta.book.service.AuthorService;
@@ -30,13 +30,13 @@ public class AuthorController {
     }
 
     @PostMapping
-    public ResponseEntity<Author> save(@RequestBody AuthorDto authorDto) {
-        return service.save(authorDto);
+    public ResponseEntity<Author> save(@RequestBody AuthorRequest authorRequest) {
+        return service.save(authorRequest);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Author> update(@PathVariable int id, @RequestBody AuthorDto authorDto) {
-        return service.update(id, authorDto);
+    public ResponseEntity<Author> update(@PathVariable int id, @RequestBody AuthorRequest authorRequest) {
+        return service.update(id, authorRequest);
     }
 
     @DeleteMapping("/{id}")

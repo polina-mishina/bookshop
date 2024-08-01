@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ru.evolenta.book.dto.BookDto;
+import ru.evolenta.book.dto.BookRequest;
 import ru.evolenta.book.model.Author;
 import ru.evolenta.book.model.Book;
 import ru.evolenta.book.repository.AuthorRepository;
@@ -27,27 +27,27 @@ public class BookService {
         return optionalBook.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    public ResponseEntity<Book> save(BookDto bookDto) {
-        Optional<Author> optionalAuthor = authorRepository.findById(bookDto.getAuthorId());
+    public ResponseEntity<Book> save(BookRequest bookRequest) {
+        Optional<Author> optionalAuthor = authorRepository.findById(bookRequest.getAuthorId());
         if (optionalAuthor.isEmpty())
             return ResponseEntity.badRequest().build();
         Author author = optionalAuthor.get();
         Book book = new Book();
-        BeanUtils.copyProperties(bookDto, book, "authorId");
+        BeanUtils.copyProperties(bookRequest, book, "authorId");
         book.setAuthor(author);
         return ResponseEntity.status(HttpStatus.CREATED).body(bookRepository.save(book));
     }
 
-    public ResponseEntity<Book> update(int id, BookDto bookDto) {
+    public ResponseEntity<Book> update(int id, BookRequest bookRequest) {
         Optional<Book> optionalBook = bookRepository.findById(id);
         if (optionalBook.isEmpty())
             return ResponseEntity.notFound().build();
-        Optional<Author> optionalAuthor = authorRepository.findById(bookDto.getAuthorId());
+        Optional<Author> optionalAuthor = authorRepository.findById(bookRequest.getAuthorId());
         if (optionalAuthor.isEmpty())
             return ResponseEntity.notFound().build();
         Author author = optionalAuthor.get();
         Book book = optionalBook.get();
-        BeanUtils.copyProperties(bookDto, book, "authorId");
+        BeanUtils.copyProperties(bookRequest, book, "authorId");
         book.setAuthor(author);
         return ResponseEntity.ok(bookRepository.save(book));
     }

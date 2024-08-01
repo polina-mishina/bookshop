@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ru.evolenta.book.dto.AuthorDto;
+import ru.evolenta.book.dto.AuthorRequest;
 import ru.evolenta.book.model.Author;
 import ru.evolenta.book.repository.AuthorRepository;
 
@@ -22,27 +22,27 @@ public class AuthorService {
         return optionalAuthor.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    public ResponseEntity<Author> save(AuthorDto authorDto) {
+    public ResponseEntity<Author> save(AuthorRequest authorRequest) {
         Author author = new Author();
-        BeanUtils.copyProperties(authorDto, author);
-        return new ResponseEntity<>(repository.save(author), HttpStatus.CREATED);
+        BeanUtils.copyProperties(authorRequest, author);
+        return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(author));
     }
 
-    public ResponseEntity<Author> update(int id, AuthorDto authorDto) {
+    public ResponseEntity<Author> update(int id, AuthorRequest authorRequest) {
         Optional<Author> optionalAuthor = repository.findById(id);
         if (optionalAuthor.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         Author author = optionalAuthor.get();
-        BeanUtils.copyProperties(authorDto, author);
-        return new ResponseEntity<>(repository.save(author), HttpStatus.OK);
+        BeanUtils.copyProperties(authorRequest, author);
+        return ResponseEntity.ok(repository.save(author));
     }
 
     public ResponseEntity<Author> delete(int id) {
         Optional<Author> optionalAuthor = repository.findById(id);
         if (optionalAuthor.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         Author author = optionalAuthor.get();
         repository.deleteById(id);
-        return new ResponseEntity<>(author, HttpStatus.OK);
+        return ResponseEntity.ok(author);
     }
 }

@@ -2,8 +2,9 @@ package ru.evolenta.book.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import ru.evolenta.book.dto.BookDto;
+import ru.evolenta.book.dto.BookRequest;
 import ru.evolenta.book.model.Book;
 import ru.evolenta.book.repository.BookRepository;
 import ru.evolenta.book.service.BookService;
@@ -35,13 +36,14 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<Book> save(@RequestBody BookDto bookDto) {
-        return service.save(bookDto);
+    public ResponseEntity<Book> save(@RequestBody BookRequest bookRequest) {
+        return service.save(bookRequest);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Book> update(@PathVariable int id, @RequestBody BookDto bookDto) {
-        return service.update(id, bookDto);
+    @Transactional
+    public ResponseEntity<Book> update(@PathVariable int id, @RequestBody BookRequest bookRequest) {
+        return service.update(id, bookRequest);
     }
 
     @DeleteMapping("/{id}")

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class AuthorDto {
+public class AuthorRequest {
     private String firstname;
     private String surname;
     private String lastname;
